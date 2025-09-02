@@ -118,4 +118,23 @@ SELECT name FROM world
  WHERE name LIKE '____';
 11.Find the capital and the name where the capital includes the name of the country.
 select capital,name from world where capital like concat(name,'%');
+-- self join
+CREATE TABLE Employee (
+    emp_id INT PRIMARY KEY,
+    emp_name VARCHAR(50),
+    manager_id INT
+);
+
+INSERT INTO Employee VALUES
+(1, 'Alice', NULL),   
+(2, 'Bob', 1),        
+(3, 'Charlie', 1),    
+(4, 'David', 2),      
+(5, 'Eva', 2);        
+select * from employee;
+select e.emp_name,e.emp_id employee,
+m.emp_name manager
+from employee e
+join employee m
+on e.manager_id=m.emp_id;
 
