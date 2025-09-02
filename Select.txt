@@ -1,3 +1,88 @@
+-- classroom data
+create database classroom;
+use classroom;
+CREATE TABLE classroom (
+rollno int8 PRIMARY KEY,
+name varchar(50) NOT NULL,
+house char(12) NOT NULL,
+grade char(1) );
+
+INSERT INTO classroom (rollno, name, house, grade)
+VALUES
+(1, 'Sam', 'Akash', 'B'),
+(2, 'Ram', 'Agni', 'A'),
+(3, 'Shyam', 'Jal','B'),
+(4, 'Sundar', 'Agni', 'A'),
+(5, 'Ram', 'Yayu', 'B');
+
+select * from classroom;
+-- where clause
+select name from classroom 
+where grade = 'a';
+-- bitwise operators
+select name from classroom 
+where grade = 'a' and rollno >3 ;
+
+use sakila;
+select * from customer;
+-- order by clause
+select * from customer
+order by first_name desc;
+
+-- Limit clause
+select * from customer
+limit 5; 
+
+-- joins  inner joins
+CREATE DATABASE join_demo;
+USE join_demo;
+CREATE TABLE Customer (
+    customer_id INT PRIMARY KEY,
+    name VARCHAR(50)
+);
+
+INSERT INTO Customer (customer_id, name) VALUES
+(1, 'Mary'),
+(2, 'John'),
+(3, 'Alice'),
+(4, 'David');
+
+CREATE TABLE Payment (
+    payment_id INT PRIMARY KEY,
+    customer_id INT,
+    amount DECIMAL(8,2),
+    payment_date DATE,
+    FOREIGN KEY (customer_id) REFERENCES Customer(customer_id)
+);
+
+INSERT INTO Payment (payment_id, customer_id, amount, payment_date) VALUES
+(101, 1, 5.99, '2025-08-01'),
+(102, 2, 9.99, '2025-08-02'),
+(103, 1, 2.50, '2025-08-05'),
+(104, 2, 4.50, '2025-08-07');
+
+select * from customer;
+select * from payment;
+-- inner join
+select c.customer_id,c.name,p.customer_id,p.payment_id,p.amount from customer c
+inner join payment p 
+on c.customer_id=p.customer_id;
+-- left join
+select c.customer_id,c.name,p.customer_id,p.payment_id,p.amount from customer c
+left join payment p 
+on c.customer_id=p.customer_id;
+-- right join
+select c.customer_id,c.name,p.customer_id,p.payment_id,p.amount from customer c
+right join payment p 
+on c.customer_id=p.customer_id;
+-- full join
+SELECT c.customer_id, c.name, p.payment_id, p.amount
+FROM Customer c
+LEFT JOIN Payment p ON c.customer_id = p.customer_id
+UNION
+SELECT c.customer_id, c.name, p.payment_id, p.amount
+FROM Customer c
+RIGHT JOIN Payment p ON c.customer_id = p.customer_id;
 Select  
 1.Find the country that start with Y.
 select name
@@ -33,3 +118,4 @@ SELECT name FROM world
  WHERE name LIKE '____';
 11.Find the capital and the name where the capital includes the name of the country.
 select capital,name from world where capital like concat(name,'%');
+
