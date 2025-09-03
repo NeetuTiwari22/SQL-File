@@ -1,3 +1,21 @@
+Select  
+1.Find the country that start with Y.
+select name
+from world
+where name like 'Y%';
+2.Find the countries that end with y.
+select name from world
+  where name like '%y';
+3.Find the countries that contain the letter x.
+select name from world
+  where name like '%x%';
+4.Find the countries that end with land.
+select name from world
+  where name like '%land';
+5.Find the countries that start with C and end with ia.
+select name from world
+  where name LIKE 'C%ia';
+
 -- classroom data
 create database classroom;
 use classroom;
@@ -67,14 +85,17 @@ select * from payment;
 select c.customer_id,c.name,p.customer_id,p.payment_id,p.amount from customer c
 inner join payment p 
 on c.customer_id=p.customer_id;
+
 -- left join
 select c.customer_id,c.name,p.customer_id,p.payment_id,p.amount from customer c
 left join payment p 
 on c.customer_id=p.customer_id;
+
 -- right join
 select c.customer_id,c.name,p.customer_id,p.payment_id,p.amount from customer c
 right join payment p 
 on c.customer_id=p.customer_id;
+
 -- full join
 SELECT c.customer_id, c.name, p.payment_id, p.amount
 FROM Customer c
@@ -83,48 +104,12 @@ UNION
 SELECT c.customer_id, c.name, p.payment_id, p.amount
 FROM Customer c
 RIGHT JOIN Payment p ON c.customer_id = p.customer_id;
-Select  
-1.Find the country that start with Y.
-select name
-from world
-where name like 'Y%';
-2.Find the countries that end with y.
-select name from world
-  where name like '%y';
-3.Find the countries that contain the letter x.
-select name from world
-  where name like '%x%';
-4.Find the countries that end with land.
-select name from world
-  where name like '%land';
-5.Find the countries that start with C and end with ia.
-select name from world
-  where name LIKE 'C%ia';
-6.Find the country that has oo in the name.
-select name from world
-  where name like '%oo%';
-7.Find the countries that have three or more a in the name.
-select name from world
-  where name like '%a%a%a%';
-8.Find the countries that have "t" as the second character.
-select name from world
- where name LIKE '_t%'
-order by name;
-9.Find the countries that have two "o" characters separated by two others.
-select name from world
- where name LIKE '%o__o%'
-10.Find the countries that have exactly four characters.
-SELECT name FROM world
- WHERE name LIKE '____';
-11.Find the capital and the name where the capital includes the name of the country.
-select capital,name from world where capital like concat(name,'%');
 -- self join
 CREATE TABLE Employee (
     emp_id INT PRIMARY KEY,
     emp_name VARCHAR(50),
     manager_id INT
 );
-
 INSERT INTO Employee VALUES
 (1, 'Alice', NULL),   
 (2, 'Bob', 1),        
@@ -138,3 +123,12 @@ from employee e
 join employee m
 on e.manager_id=m.emp_id;
 
+-- cros join
+use join_demo;
+select * from customer;
+select * from employee;
+select * from payment;
+select c.name,c.customer_id,p.payment_id,p.amount
+from customer as c
+cross join payment as p
+order by c.customer_id;
