@@ -132,3 +132,70 @@ select c.name,c.customer_id,p.payment_id,p.amount
 from customer as c
 cross join payment as p
 order by c.customer_id;
+
+-- group by statement
+use join_demo;
+select * from payment;
+select customer_id , sum(amount) as sum
+from payment p
+group by customer_id 
+order by sum; 
+
+-- having clause
+use join_demo;
+CREATE TABLE Sales (
+    sale_id INT PRIMARY KEY,
+    product VARCHAR(50),
+    category VARCHAR(50),
+    amount DECIMAL(8,2)
+);
+INSERT INTO Sales (sale_id, product, category, amount) VALUES
+(1, 'Book', 'Stationery', 200),
+(2, 'Pen', 'Stationery', 50),
+(3, 'Bag', 'Stationery', 500),
+(4, 'Laptop', 'Electronics', 45000),
+(5, 'Mouse', 'Electronics', 800),
+(6, 'Phone', 'Electronics', 30000),
+(7, 'Shirt', 'Clothing', 1200),
+(8, 'Jeans', 'Clothing', 2200);
+select * from sales;
+
+select category,sum(amount)
+from sales
+group by category
+having sum(amount)>=5000;
+
+use world;
+-- if else
+select code , name ,if(name='aruba','hey','hello')  , indepyear from country ;
+select code , name , 
+if(name='aruba','Trror country',if(name='angola','Terroist','Tourism')), indepyear from country ; 
+-- case
+select code,name,
+case
+when name = 'aruba'then 'terror'
+when name = 'angola'then 'terrorist'
+else 'tourism'
+end as 'state'
+from country;
+-- ifnull
+select name,indepyear,ifnull(indepyear,0)from country;
+select count(indepyear),count(ifnull(indepyear,0))from country;
+select name,continent,nullif(length(name),length(continent))from country;
+select * from country;
+
+select code,name,
+case
+when population>200000 then 'Developed'
+when name = 'angola'then 'Developed'
+else 'Under developed'
+end as 'Country Status'
+from country;
+
+-- subquery
+use world;
+select name, population from city where population>(select population from city where name = 'batna');
+-- multi row query
+select region,continent from country where continent = 'africa';
+
+select name,population,continent from country where name in (select name from country where continent = 'europe');
