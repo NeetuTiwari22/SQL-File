@@ -276,3 +276,66 @@ create table studentinfo (sid int primary key ,sname varchar(20),courseid int,
 insert into studentinfo values(1,'tushar',10);
 insert into studentinfo values(2,'aman',11);
 select  * from studentinfo;
+
+-- corrlated with cte
+-- method 1
+use regex1;
+select * from employees;
+select * from departments;
+-- corrlated
+-- find the employees name who have the salary gretar than the avg salary from department.
+select empid,empname,salary,deptid
+from employees as oute
+where salary >
+(select Avg(salary)from employees as inn
+   where inn.deptid=oute.deptid);
+   
+   -- method = 2 using CTE -> common table name
+   with xyz as 
+    (select deptid,avg(salary)as dsalary from employees group by deptid)
+	select e.empname,e.salary,xyz.dsalary 
+     from xyz join employees as e
+     where e.deptid=xyz.deptid and
+     e.salary > xyz.dsalary;
+     
+-- set opetration
+-- 1).union
+use sakila;
+select * from actor where actor_id between 1 and 3    
+union 
+select * from actor where actor_id between 3 and 5;   
+-- 2).union all
+select * from actor where actor_id between 1 and 3    
+union all
+select * from actor where actor_id between 3 and 5;   
+-- 3).INTERSECT
+select * from actor where actor_id between 1 and 3    
+intersect 
+select * from actor where actor_id between 3 and 5;   
+-- 4).except
+select * from actor where actor_id between 1 and 3    
+except
+select * from actor where actor_id between 3 and 5;   
+
+-- recursive cte
+with recursive cte as 
+(select 1 as num
+union
+select num+1 from cte where num<6)
+select * from cte;
+-- factorial 
+with recursive cte as 
+(select 1 as i,1 as factorial
+union
+select i+1, factorial*(i+1) from cte where i<6)
+select * from cte;
+
+select * from employees2;
+
+with recursive cte as 
+(select employee_id,name,manager_id,1 as levels
+from employees2 as e where manager_id is null
+union
+select etemp.employee_id,etemp.name,etemp.manager_id,levels+1
+from employees2 as etemp join cte where etemp.manager_id=cte.employee_id)
+select * from cte;
