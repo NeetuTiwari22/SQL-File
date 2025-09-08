@@ -199,3 +199,80 @@ select name, population from city where population>(select population from city 
 select region,continent from country where continent = 'africa';
 
 select name,population,continent from country where name in (select name from country where continent = 'europe');
+
+use regex1;
+select * from departments;
+select * from employees;
+
+select e1.empid,e1.empname,e1.deptid,e1.salary
+from employees as e1
+where e1.salary > 
+(select avg(salary)from employees as e2
+where e1.deptid = e2.deptid);
+
+-- delete,insert,update,truncate
+use sakila;
+create table StudentAccess(id int, sname varchar(10) );
+insert into StudentAccess value(9,"abc");
+insert into StudentAccess (id,sname) value(19,'abc');
+select * from StudentAccess;
+insert into StudentAccess(id) values(11);
+insert into StudentAccess(sname) values('yash');
+update  StudentAccess set sname = 'raj'; -- all row are affected
+update  StudentAccess set sname = 'abishek' where id=19; -- specified row updated
+delete from studentaccess;-- all row are affected
+delete from StudentAccess where id between 9 and 19; -- specified row delete
+insert into StudentAccess (id,sname) value(23,'naina');
+truncate table studentaccess; -- drop table + recreate structer
+
+-- datatype tinyint
+create table test18(id tinyint);
+insert into test18(id) values(10);
+insert into test18(id) values(-128);
+insert into test18(id) values(-129); -- size is smaller 1 byte 2^8 256 (-128 to 127)
+select * from test18;
+-- unsigned = positive values
+drop table test19;
+create table test19(id tinyint unsigned); -- all positive number (range 255)
+insert into test19(id) values(10);
+insert into test19(id) values(-128);
+
+-- DDL statement with constraint 
+use regex1;
+-- not null
+create table test1 (id int, salary int not null); 
+insert into test1 values(10,900);
+insert into test1 values(10,null); -- error
+select  * from test1;
+drop table test1;
+-- default
+create table test2 (id int default 0, salary int not null); 
+insert into test2 values(10,900);
+insert into test2(salary) values  (1881); 
+select  * from test2;
+
+-- unique 
+create table test3 (id int , salary int default 100 unique); 
+insert into test3 values(10,900);
+insert into test3 values(11,900);-- error here
+insert into test3(id) values(9999999);
+select  * from test3;
+
+-- primary key constraint 
+create table test4 (id int primary key , salary int ); 
+insert into test4 values(10,900);
+insert into test4 values(10,90012);-- error here
+insert into test4(id) values(9999999);
+select  * from test4;
+
+--  creating foreign key 
+drop table courses1;
+create table courses1(course_id int primary key,cname varchar(20));
+insert into courses1 values(10,'DSA'),(11,'PYTHON');
+select * from courses1;
+
+create table studentinfo (sid int primary key ,sname varchar(20),courseid int,
+ foreign key (courseid) references courses1(course_id)); 
+insert into studentinfo values(1,'tushar',10);
+insert into studentinfo values(2,'aman',11);
+select  * from studentinfo;
