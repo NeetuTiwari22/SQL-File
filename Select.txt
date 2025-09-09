@@ -339,3 +339,24 @@ union
 select etemp.employee_id,etemp.name,etemp.manager_id,levels+1
 from employees2 as etemp join cte where etemp.manager_id=cte.employee_id)
 select * from cte;
+
+-- view
+use sakila;
+create view temp1 as(
+select first_name,count(*) from actor where actor_id>10
+group by first_name order by count(*) desc); 
+select * from temp1;
+-- security perpose
+create view temp2 as
+(select first_name,last_name from actor);
+select * from temp2;
+
+-- ctas -> crate table as select
+create table factors as
+(select actor_id,first_name,last_name from actor where actor_id<7);
+select * from factors; 
+
+create view temp4 as
+(select first_name,last_name from factors);
+insert into temp4 values("raj","sharma");
+select * from temp4;
