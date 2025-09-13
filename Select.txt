@@ -360,3 +360,77 @@ create view temp4 as
 (select first_name,last_name from factors);
 insert into temp4 values("raj","sharma");
 select * from temp4;
+
+-- window function 
+use tushar;
+select * from employeesales;
+-- over clause
+select *, 
+avg(saleamount) over(), 
+max(saleamount) over(),
+min(saleamount) over() from employeesales; 
+-- patition by
+select * ,avg(saleamount) over(),
+avg(saleamount) over(partition by employeename)
+ from employeesales;
+
+select * ,avg(saleamount) over(partition by department),
+avg(saleamount) over(partition by department,saledate)
+ from employeesales;
+ -- order by
+ select *, 
+ sum(saleamount) over(order by saleamount) from employeesales;
+ -- running sum each department
+ select *,
+ sum(saleamount)over(partition by department order by saleamount)
+ from employeesales;
+ 
+ insert into employeesales values(12,'alice','developer','2025-06-10',5000.00);
+ select * ,sum(saleamount) over( partition by department,employeename) from employeesales;
+ 
+-- 2 highest salary
+select max(saleamount) from employeesales where saleamount <
+(select max(saleamount) from employeesales);
+-- 3 highest salary 
+select max(saleamount) from employeesales where saleamount <
+       (select max(saleamount) from employeesales where saleamount<
+               (select max(saleamount) from employeesales));
+
+-- window function 
+ -- 1).row_number 
+ select * ,row_number() over() from employeesales;
+ -- with partition by
+ select * ,row_number() over(partition by department) from employeesales;
+-- rank()
+  select * ,rank() over(order by saleamount) from employeesales;
+  -- rank with partition by
+   select * ,rank() over(partition by department order by saleamount desc) from employeesales;
+-- dense_rank
+    select * ,rank() over(partition by department order by saleamount desc),
+    dense_rank() over(partition by department order by saleamount desc) from employeesales;
+-- second highest 
+with datarank as 
+(select *,
+dense_rank() over(order by saleamount desc) as `ranks` from employeesales)
+
+select * from datarank where ranks = 2;
+
+-- every department  2 highest 
+with datarank as 
+(select *,
+dense_rank() over( partition by department order  by saleamount desc) as `ranks` from employeesales)
+
+select * from datarank where ranks = 2;
+
+-- lag and lead 
+select * ,lead(saleamount) over() from employeesales;
+select * ,lag(saleamount) over() from employeesales;
+insert into employeesales values(1,'alice','sales','25-06-2',600.00);
+ select * ,
+saleamount-lag(saleamount)over(partition by department,employeename order by saledate) 
+from employeesales where employeename = 'alice'; 
+
+select * ,
+lead(saledate)over(partition by department,employeename order by saledate) as nextdate,
+datediff( lead(saledate)over(partition by department,employeename order by saledate), saledate)
+from employeesales where employeename = 'alice' and department= 'sales';
